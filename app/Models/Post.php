@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-class Post extends Model
+use Cog\Contracts\Love\Reactable\Models\Reactable as ReactableInterface;
+use Cog\Laravel\Love\Reactable\Models\Traits\Reactable;
+class Post extends Model implements ReactableInterface
 {
-    use HasFactory;
+    use HasFactory,Reactable;
     protected $fillable = ['user_id','content','media'] ;
 
     public function user():BelongsTo{

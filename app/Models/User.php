@@ -9,10 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
-class User extends Authenticatable
+use Cog\Contracts\Love\Reacterable\Models\Reacterable as ReacterableInterface;
+use Cog\Laravel\Love\Reacterable\Models\Traits\Reacterable;
+class User extends Authenticatable implements ReacterableInterface
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,Reacterable;
 
     /**
      * The attributes that are mass assignable.
@@ -48,4 +49,8 @@ class User extends Authenticatable
     public function posts():HasMany{
         return $this->hasMany(Post::class,"user_id","id");
     }
+    public function comments():HasMany{
+        return $this->hasMany(Comment::class,"user_id","id");
+    }
+
 }

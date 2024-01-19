@@ -1,16 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Post;
 use App\Filters\PostFilter;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use App\Http\Resources\PostResource;
+use Illuminate\Support\Facades\File;
+use App\Http\Resources\PostCollection;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Http\Resources\PostCollection;
-use App\Http\Resources\PostResource;
-use App\Models\Post;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
+use Cog\Laravel\Love\Reaction\Events\ReactionHasBeenRemoved;
+use Cog\Laravel\Love\Reaction\Events\ReactionHasBeenAdded;
 
 class PostController extends Controller
 {
@@ -51,11 +52,13 @@ class PostController extends Controller
      * Display the specified resource.
      */
     public function show(Post $post)
-    {   $postDetail = request()->query("includeComments");
+    {
+
+        $postDetail = request()->query("includeComments");
         if(isset($postDetail)) {
           return new PostResource($post->loadMissing("comments"));
         }
-        return new PostCollection($post);
+        return new PostResource($post);
     }
     /**
      * Update the specified resource in storage.
@@ -106,5 +109,9 @@ class PostController extends Controller
             }
         }
         $post->delete();
+        $post->comments()->delete();
+        return response()->json([
+            "message" => "A post has been deleted",
+        ]);
     }
 }
