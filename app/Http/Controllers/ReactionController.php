@@ -17,8 +17,10 @@ class ReactionController extends Controller
         $isReacted = $reacterFacade->hasReactedTo($post);
         if (!$isReacted) {
             $reacterFacade->reactTo($post, 'Like');
+            return response()->json(["message" => "You have  reacted to a post"]);
         } else {
             $reacterFacade->unreactTo($post, 'Like');
+            return response()->json(["message"=>"You have unreacted to the post"]);
         }
     }
 }

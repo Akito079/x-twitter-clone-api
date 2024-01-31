@@ -47,5 +47,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+        $user->posts()->delete();
+        $user->comments()->delete();
     }
 }

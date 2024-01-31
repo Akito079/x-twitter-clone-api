@@ -75,7 +75,7 @@ class PostController extends Controller
         //only update files if the request have files
         if (isset($imgfiles)) {
             $oldImages = explode(",", $post->media);
-            //if orginal post have images,delete them
+        //if orginal post have images,delete them
             if (isset($oldImages)) {
                 foreach ($oldImages as $oldImage) {
                     if (File::exists(public_path() . "/postImages/" . $oldImage)) {
@@ -83,14 +83,13 @@ class PostController extends Controller
                     }
                 }
             }
-            // updatig new files to database
+        // updatig new files to database
             foreach ($imgfiles as $imgFile) {
                 $fileName = uniqid() . $imgFile->getClientOriginalName();
                 $imgFile->move(public_path() . "/postImages", $fileName);
                 $mediaFiles[] = $fileName;
             }
             $data["media"] = Arr::join($mediaFiles, ",");
-
         }
         $post->update($data);
     }

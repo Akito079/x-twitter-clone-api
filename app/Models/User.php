@@ -11,9 +11,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Cog\Contracts\Love\Reacterable\Models\Reacterable as ReacterableInterface;
 use Cog\Laravel\Love\Reacterable\Models\Traits\Reacterable;
+use Overtrue\LaravelFollow\Traits\Follower;
+use Overtrue\LaravelFollow\Traits\Followable;
+
+
 class User extends Authenticatable implements ReacterableInterface
 {
-    use HasApiTokens, HasFactory, Notifiable,Reacterable;
+    use HasApiTokens,HasFactory, Notifiable,Reacterable,Follower,Followable;
 
     /**
      * The attributes that are mass assignable.

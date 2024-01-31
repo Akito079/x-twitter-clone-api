@@ -15,11 +15,12 @@ class PostResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        //recation count
         $post = Post::find($this->id);
         $reactantFacade = $post->viaLoveReactant();
         $reactionTotal = $reactantFacade->getReactionTotal();
         $totalWeight = $reactionTotal->getCount();
-        
+
         return [
             "id"=> $this->id,
             "content"=>$this->content,
