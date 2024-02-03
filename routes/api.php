@@ -1,18 +1,19 @@
 <?php
 
-use App\Http\Controllers\Auth\ApiAuthController;
-use App\Http\Controllers\FollowerController;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
 
+use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\ReactionController;
-use App\Http\Resources\UserResource;
+use App\Http\Controllers\Auth\ApiAuthController;
 
-Route::middleware(['auth:api','cors'])->get('/user', function (Request $request) {
-    return new UserResource($request->user());
+Route::middleware(['auth:api','cors'])->get('/user', function () {
+    return new UserResource(Auth::user());
 });
 
 //api resources
