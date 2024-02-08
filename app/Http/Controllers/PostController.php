@@ -22,17 +22,17 @@ class PostController extends Controller
     {$filter = new PostFilter();
         $postFilter = $filter->transform($request);
         $posts = Post::where($postFilter);
-        return new PostCollection($posts->get());
+        return new PostCollection($posts->orderBy('created_at','desc')->get());
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StorePostRequest $request)
-    {
+    {   
         $data = [
             "content" => $request->content,
-            "user_id" => $request->userId,
+            "user_id" => $request->user()->id,
         ];
         $mediaFiles = [];
         $files = $request->file("media");

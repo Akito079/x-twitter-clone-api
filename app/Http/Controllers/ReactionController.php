@@ -10,7 +10,7 @@ class ReactionController extends Controller
 {
     public function react(Request $request)
     {
-        $user = User::find($request->userId);
+        $user = User::find($request->user()->id);
         $post = Post::find($request->postId);
         $reacterFacade = $user->viaLoveReacter();
         $reactantFacade = $post->viaLoveReactant();

@@ -26,6 +26,7 @@ class User extends Authenticatable implements ReacterableInterface
      */
     protected $fillable = [
         'name',
+         'nick_name',
         'email',
         'profile_image',
         'password',

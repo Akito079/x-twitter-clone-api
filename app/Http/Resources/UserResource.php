@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,6 +18,8 @@ class UserResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
+            "nickName" => $this->nick_name,
+            "followers" => User::find($this->id)->followers->count(),
             "email" => $this->email,
             "profileImage" => $this->profile_image,
             "posts" => $this->find($this->id)->posts,
