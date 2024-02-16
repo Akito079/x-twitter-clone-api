@@ -26,7 +26,8 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::apiResource('posts',PostController::class);
     Route::apiResource('users', UserController::class);
-    Route::apiResource('comments',CommentController::class);
+    Route::post('comments',[CommentController::class,"store"]);
+    Route::get('comments/{postId}',[CommentController::class,"show"]);
     //reactions
     Route::post("reactions",[ReactionController::class,"react"]);
     //followers

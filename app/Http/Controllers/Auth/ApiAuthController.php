@@ -34,10 +34,12 @@ class ApiAuthController extends Controller
         }
     }
 
+
     public function register(Request $request){
         $validators = Validator::make($request->all(),[
             'name' => 'required',
             'email' => 'required|unique:users',
+            'profileImage' => 'required|mimes:png,jpg,jpeg,webp',
             'nickName' => 'required',
             'password' => 'required',
             'passwordConfirm' => 'required|same:password',
@@ -47,11 +49,15 @@ class ApiAuthController extends Controller
             return response()->json(['errors'=>$validators->errors()->all()],422);
         }
 
+        $file = $request->file('profileImage');
+        $fileName = uniqid().$file->getClientOriginalName();
+        $file->move(public_path()."/profileImages",$fileName);
         $user = User::create([
             'name' => $request->name,
             'nick_name' => $request->nickName,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'profile_image' => $fileName,
         ]);
 
         $token = $user->createToken('Sanctum register')->plainTextToken;

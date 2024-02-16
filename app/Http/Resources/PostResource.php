@@ -32,14 +32,16 @@ class PostResource extends JsonResource
         return [
             "id"=> $this->id,
             "content"=>$this->content,
+            "hashTags" => $this->hashtags,
             "userId" => $this->user_id,
+            "userProfile" => $this->user->profile_image,
             "userName" => Post::find($this->id)->user->name,
             "userNickname" => Post::find($this->id)->user->nick_name,
             "media" =>$this->media == null ? "" :explode(",",$this->media),
             "reactions" => $totalWeight,
             "reactStatus" => $isReacted,
             "comments" => count(Post::find($this->id)->comments),
-            "commentDeatils" => CommentResource::collection($this->whenLoaded("comments")),
+            "commentDetails" => CommentResource::collection($this->whenLoaded("comments")),
             "createdDate" => date_format($this->created_at,"d-M-Y/h:i A"),
         ];
     }

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Resources\CommentResource;
+use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\CommentCollection;
 use App\Http\Requests\StoreCommentRequest;
-use App\Http\Requests\UpdatePostRequest;
 
 class CommentController extends Controller
 {
@@ -23,16 +24,16 @@ class CommentController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreCommentRequest $request)
-    {  
+    {
         return new CommentResource(Comment::create($request->all()));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show($postId)
     {
-        return new CommentResource($comment);
+       return new CommentResource(Comment::where('post_id',$postId)->get());
     }
 
     /**

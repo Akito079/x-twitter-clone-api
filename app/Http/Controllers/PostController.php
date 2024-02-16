@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Post;
+use App\Models\Hashtag;
 use App\Filters\PostFilter;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -10,8 +11,8 @@ use Illuminate\Support\Facades\File;
 use App\Http\Resources\PostCollection;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use Cog\Laravel\Love\Reaction\Events\ReactionHasBeenRemoved;
 use Cog\Laravel\Love\Reaction\Events\ReactionHasBeenAdded;
+use Cog\Laravel\Love\Reaction\Events\ReactionHasBeenRemoved;
 
 class PostController extends Controller
 {
@@ -29,7 +30,8 @@ class PostController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StorePostRequest $request)
-    {   
+    {
+        $content = $request->content;
         $data = [
             "content" => $request->content,
             "user_id" => $request->user()->id,
@@ -45,7 +47,17 @@ class PostController extends Controller
 
             $data["media"] = Arr::join($mediaFiles, ",");
         }
-        return new PostResource(Post::create($data));
+        $post = Post::create($data);
+
+        // creating hashtags of a post
+        $hashTags = $this->extractHashtags($content);
+        if(isset($hashTags)){
+            foreach ($hashTags as $hashtag) {
+                $hashtagModel = Hashtag::firstOrCreate(['name' => $hashtag]);
+                $post->hashtags()->attach($hashtagModel);
+            }
+        }
+        return new PostResource($post);
     }
 
     /**
@@ -65,6 +77,7 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
+
         $data = [
             "content" => $request->content,
             "user_id" => $request->userId,
@@ -91,6 +104,23 @@ class PostController extends Controller
             }
             $data["media"] = Arr::join($mediaFiles, ",");
         }
+
+        //deleting pivot hashtag
+        if(isset($post->hashtags)){
+            foreach($post->hashtags as $hashtag){
+                $hashtag->pivot->delete();
+            }
+        }
+        $content = $request->content;
+        $hashTags = $this->extractHashtags($content);
+
+        //updating pivot hashtag
+        if(isset($hashTags)){
+            foreach ($hashTags as $hashtag) {
+                $hashtagModel = Hashtag::firstOrCreate(['name' => $hashtag]);
+                $post->hashtags()->attach($hashtagModel);
+            }
+        }
         $post->update($data);
     }
 
@@ -109,8 +139,18 @@ class PostController extends Controller
         }
         $post->delete();
         $post->comments()->delete();
+        foreach($post->hashtags as $hashtag){
+           $hashtag->pivot->delete();
+        }
         return response()->json([
             "message" => "A post has been deleted",
         ]);
+    }
+
+    // extract the hashtags from the inputs
+    protected function extractHashtags($content){
+        $pattern = '/#(\w+)/';
+        preg_match_all($pattern, $content, $matches);
+        return array_unique($matches[1]);
     }
 }
