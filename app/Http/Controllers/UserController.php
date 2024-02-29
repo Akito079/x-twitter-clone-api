@@ -17,13 +17,7 @@ class UserController extends Controller
         return new UserCollection(User::get());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+
 
     /**
      * Display the specified resource.
@@ -33,14 +27,7 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
+  
     /**
      * Remove the specified resource from storage.
      */

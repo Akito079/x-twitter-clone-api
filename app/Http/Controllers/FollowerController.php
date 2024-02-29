@@ -17,16 +17,15 @@ class FollowerController extends Controller
     //toggle following
     public function store(Request $request){
       //getting the users from request
-      $authUser = User::find($request->authUserId);
+      $authUser = User::find($request->user()->id);
       $followedUser = User::find($request->userId);
       //toggle follow
       $authUser->toggleFollow($followedUser);
-      $username = $followedUser->name;
       //handling response based on the user is followiing another user or not
       if($authUser->isFollowing($followedUser)){
-        return response()->json(["message"=>"You are following ". $username]);
+        return response()->json(["message"=>true]);
       }else{
-        return response()->json(["message"=>"You have unfollowed ". $username]);
+        return response()->json(["message"=>false]);
       }
     }
 }

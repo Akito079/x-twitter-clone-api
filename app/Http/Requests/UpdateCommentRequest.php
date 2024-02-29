@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateeCommentRequest extends FormRequest
+class UpdateCommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -41,7 +41,7 @@ class UpdateeCommentRequest extends FormRequest
         $this->merge([
             "user_id" => $this->userId,
             "post_id" => $this->postId,
-            "comment_content" => $this->comment_content,
+            "comment_content" => $this->commentContent,
         ]);
     }
 }

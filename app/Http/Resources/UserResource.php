@@ -15,14 +15,19 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // for follow status
+        $authUser = User::find($request->user()->id);
+        $user = User::find($this->id);
         return [
             "id" => $this->id,
             "name" => $this->name,
             "nickName" => $this->nick_name,
+            "isFollowed" => $authUser->isFollowing($user),
             "followers" => User::find($this->id)->followers->count(),
+            "followings" => User::find($this->id)->followings->count(),
             "email" => $this->email,
             "profileImage" => $this->profile_image,
-            "posts" => $this->find($this->id)->posts,
+            "posts" => count($this->find($this->id)->posts),
         ];
     }
 }
